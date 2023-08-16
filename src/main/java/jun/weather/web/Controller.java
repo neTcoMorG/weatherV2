@@ -2,6 +2,7 @@ package jun.weather.web;
 
 import jun.weather.domain.weather.WeatherService;
 import lombok.AllArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class Controller {
 
     private final WeatherService weatherService;
+
+    @GetMapping("/all")
+    public HttpEntity<?> getAllRecords () {
+        return ResponseEntity.ok(weatherService.getAll(5));
+    }
+
+    @GetMapping("/all/recent")
+    public HttpEntity<?> getAllRecent () {
+        return ResponseEntity.ok(weatherService.getAllRegionRecentValue());
+    }
 
     @GetMapping("/{regionId}")
     public HttpEntity<?> getTotalRecords (@PathVariable Long regionId) {
@@ -33,4 +44,5 @@ public class Controller {
     public HttpEntity<?> getWindRecords (@PathVariable Long regionId) {
         return ResponseEntity.ok(weatherService.getWindRecords(regionId));
     }
+
 }

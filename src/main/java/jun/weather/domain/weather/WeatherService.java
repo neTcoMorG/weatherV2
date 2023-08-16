@@ -9,6 +9,7 @@ import jun.weather.domain.repository.RegionRepository;
 import jun.weather.domain.repository.WeatherRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,14 +22,27 @@ public class WeatherService {
     private final WeatherRepository weatherRepository;
     private final RegionRepository regionRepository;
 
+    @Transactional
+    public List<WeatherInformation> getAll (int limit) {
+        List<WeatherInformation> result = new ArrayList<>();
+        List<Region> regions = regionRepository.findAll();
+
+        regions.forEach(region -> {
+            WeatherInformation info = new WeatherInformation(region.getName(),
+                    getHumRecords(region.getId()), getTempRecords(region.getId()), getWindRecords(region.getId()));
+            result.add(info);
+        });
+
+        return result;
+    }
+
     public WeatherInformation getWeather (Long id) {
         String regionName = regionRepository.findById(id).orElseThrow().getName();
         return new WeatherInformation(regionName, getHumRecords(id), getTempRecords(id), getWindRecords(id));
     }
 
-
     public List<RegionData> getAllRegionRecentValue () {
-        return new ArrayList<>();
+        return weatherRepository.findRecentRegionGroupBy();
     }
 
     public List<Record<Integer>> getHumRecords (Long regionId) {
@@ -46,7 +60,7 @@ public class WeatherService {
     private <T> List<Record<T>> getWeatherRecords (Long regionId, Function<Weather, T> getter) {
         Region findRegion = getRegion(regionId);
 
-        List<Weather> records = weatherRepository.findTop5ByRegionOrderById(findRegion);
+        List<Weather> records = weatherRepository.findTop20ByRegionOrderByIdDesc(findRegion);
         List<Record<T>> result = new ArrayList<>();
 
         records.forEach(r -> {
