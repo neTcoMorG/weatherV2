@@ -20,7 +20,7 @@ public class WeatherScheduler {
     private final WeatherRepository weatherRepository;
     private final RegionRepository regionRepository;
 
-    @Scheduled(cron = "0 0 0/1 * * *")
+    @Scheduled(fixedRate = 300000)
     public void processor() throws Exception {
         collect();
     }

@@ -44,5 +44,4 @@ public class Controller {
     public HttpEntity<?> getWindRecords (@PathVariable Long regionId) {
         return ResponseEntity.ok(weatherService.getWindRecords(regionId));
     }
-
 }
