@@ -9,7 +9,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface WeatherRepository extends JpaRepository<Weather, Long> {
-
     /*
         지역별 최근 날씨 정보 Query
         SELECT * FROM weather w WHERE w.id IN (SELECT MAX(id) FROM weather GROUP BY region_id);
@@ -19,5 +18,5 @@ public interface WeatherRepository extends JpaRepository<Weather, Long> {
                     "WHERE (w.region.id, w.id) IN (SELECT w.region.id, MAX(id) FROM Weather w GROUP BY w.region.id)")
     List<RegionData> findRecentRegionGroupBy ();
 
-    List<Weather> findTop20ByRegionOrderByIdDesc (Region region);
+    List<Weather> findTop1000ByRegionOrderByIdDesc(Region region);
 }

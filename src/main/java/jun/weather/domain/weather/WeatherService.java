@@ -60,7 +60,7 @@ public class WeatherService {
     private <T> List<Record<T>> getWeatherRecords (Long regionId, Function<Weather, T> getter) {
         Region findRegion = getRegion(regionId);
 
-        List<Weather> records = weatherRepository.findTop20ByRegionOrderByIdDesc(findRegion);
+        List<Weather> records = weatherRepository.findTop1000ByRegionOrderByIdDesc(findRegion);
         List<Record<T>> result = new ArrayList<>();
 
         records.forEach(r -> {

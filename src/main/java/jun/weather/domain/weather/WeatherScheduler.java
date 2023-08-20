@@ -21,7 +21,7 @@ public class WeatherScheduler {
     private final RegionRepository regionRepository;
 
     @Scheduled(fixedRate = 300000)
-    public void processor() throws Exception {
+    public void processor () throws Exception {
         collect();
     }
 
